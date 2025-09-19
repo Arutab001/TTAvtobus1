@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "live-server ./ --open=./src/index.html"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "typescript": "^5.9.2"
+  }
+}
