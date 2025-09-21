@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+  background-color: #F6F7F9;
+}
+
+header {
+  width: 375px;
+  height: 70px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+  align-items: center;
+}
+header .logo {
+  display: flex;
+  flex-direction: row;
+  padding-left: 5%;
+  color: #005BFE;
+  align-items: center;
+  width: 50%;
+}
+header .logo img {
+  width: 12%;
+  height: 12%;
+  padding-right: 10%;
+}
+header .group-button {
+  padding-right: 5%;
+}
+header .group-button button {
+  background-color: #005BFE;
+  color: #FFFFFF;
+  border-radius: 6px;
+  width: 82px;
+  height: 38px;
+  border: none;
+}
+header .group-button button:active {
+  background-color: #0047C6;
+}
+
+#add-group-button {
+  width: 343px;
+  height: 50px;
+  border-radius: 6px;
+  background-color: #F81155;
+  margin: 24px 16px 0 16px;
+  color: #FFFFFF;
+  border: none;
+}
+#add-group-button:active {
+  background-color: #D1003E;
+}

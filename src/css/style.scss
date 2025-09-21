@@ -1,0 +1,61 @@
+$light-blue: #005BFE;
+$dark-blue: #0047C6;
+$light-white: #FFFFFF;
+$dark-white: #F6F7F9;
+
+
+body {
+    margin: 0;
+    background-color: $dark-white;
+}
+
+header {
+    width: 375px;
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: $light-white;
+    align-items: center;
+    .logo {
+        display: flex;
+        flex-direction: row;
+        padding-left: 5%;
+        color: $light-blue;
+        align-items: center;
+        width: 50%;
+        img {
+            width: 12%;
+            height: 12%;
+            padding-right: 10%;
+        }
+    }
+    .group-button {
+        padding-right: 5%;
+        button {
+            background-color: $light-blue;
+            color: $light-white;
+            border-radius: 6px;
+            width: 82px;
+            height: 38px;
+            border: none;
+            &:active {
+                background-color: $dark-blue;
+            }
+            
+        }
+    }
+}
+
+#add-group-button {
+    width: 343px;
+    height: 50px;
+    border-radius: 6px;
+    background-color: #F81155;
+    margin: 24px 16px 0 16px;
+    color: $light-white;
+    border: none;
+    &:active {
+        background-color: #D1003E;
+    }
+}

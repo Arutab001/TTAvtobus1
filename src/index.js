@@ -1,7 +1,7 @@
 "use strict";
-const message = "Привет, TypeScript!";
-const app = document.getElementById("app");
-if (app) {
-    app.innerHTML = `<h1>${message}</h1>`;
+const groups_list = document.getElementById("groups");
+let groups = [];
+if (groups.length == 0) {
+    groups_list.innerHTML = `<p>Список контактов пуст</p>`;
 }
 //# sourceMappingURL=index.js.map
