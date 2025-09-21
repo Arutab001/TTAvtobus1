@@ -3,7 +3,6 @@ $dark-blue: #0047C6;
 $light-white: #FFFFFF;
 $dark-white: #F6F7F9;
 
-
 body {
     margin: 0;
     background-color: $dark-white;
@@ -47,15 +46,94 @@ header {
     }
 }
 
+main {
+    margin-top: 24px;
+    width: 375px;
+    height: 812px - 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #add-group-button {
     width: 343px;
     height: 50px;
     border-radius: 6px;
     background-color: #F81155;
-    margin: 24px 16px 0 16px;
     color: $light-white;
     border: none;
     &:active {
         background-color: #D1003E;
+    }
+}
+.empty-list {
+    color: #000000;
+    opacity: 30%;
+}
+
+// Стили для меню групп
+.groups-menu-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    background-color: $light-white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.groups-menu {
+    h3 {
+        color: $light-blue;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .empty-groups {
+        color: #000000;
+        opacity: 30%;
+        text-align: center;
+        margin: 20px 0;
+    }
+    
+    .group-item {
+        padding: 10px;
+        margin: 5px 0;
+        background-color: $dark-white;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        
+        &:hover {
+            background-color: #E8F0FE;
+        }
+        
+        span {
+            color: #000000;
+            font-weight: 500;
+        }
+    }
+    
+    #add-group-btn {
+        width: 100%;
+        height: 40px;
+        background-color: $light-blue;
+        color: $light-white;
+        border: none;
+        border-radius: 6px;
+        margin-top: 20px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        
+        &:hover {
+            background-color: $dark-blue;
+        }
+        
+        &:active {
+            background-color: $dark-blue;
+        }
     }
 }
