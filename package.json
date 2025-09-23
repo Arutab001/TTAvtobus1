@@ -12,5 +12,11 @@
     "live-server": "^1.2.2",
     "sass": "^1.93.0",
     "typescript": "^5.9.2"
-  }
+  },
+  "dependencies": {
+  "typescript": "^5.9.2",
+  "sass": "^1.93.0",
+  "concurrently": "^9.2.1",
+  "live-server": "^1.2.2"
+}
 }
