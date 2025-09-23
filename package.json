@@ -1,13 +1,12 @@
 {
   "scripts": {
-  "build": "npx tsc && sass src/css:src/css --no-source-map",
-  "build:css": "sass src/css:src/css --no-source-map",
-  "dev": "npx tsc --watch",
-  "dev:css": "sass src/css:src/css --watch --no-source-map",
-  "dev:all": "concurrently \"npx tsc --watch\" \"sass src/css:src/css --watch --no-source-map\"",
-  "start": "live-server ./ --open=./src/index.html"
-}
-,
+    "build": "npx tsc && sass src/css:src/css --no-source-map",
+    "build:css": "sass src/css:src/css --no-source-map",
+    "dev": "npx tsc --watch",
+    "dev:css": "sass src/css:src/css --watch --no-source-map",
+    "dev:all": "concurrently \"npx tsc --watch\" \"sass src/css:src/css --watch --no-source-map\"",
+    "start": "live-server ./ --open=./src/index.html"
+  },
   "devDependencies": {
     "concurrently": "^9.2.1",
     "live-server": "^1.2.2",
