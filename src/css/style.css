@@ -1,32 +1,55 @@
+@charset "UTF-8";
+@font-face {
+  font-family: "Circe";
+  src: url("../fonts/Circe-Regular.woff2") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Circe";
+  src: url("../fonts/Circe-Light.woff2") format("truetype");
+  font-weight: light;
+  font-style: normal;
+}
+html {
+  width: 100%;
+  font-family: "Circe", sans-serif;
+}
+
 body {
   margin: 0;
   background-color: #F6F7F9;
 }
 
 header {
-  width: 375px;
+  width: 100%;
   height: 70px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  column-gap: 12px;
   background-color: #FFFFFF;
   align-items: center;
+  padding: 0 12px;
+  box-sizing: border-box;
 }
 header .logo {
   display: flex;
   flex-direction: row;
-  padding-left: 5%;
+  padding-left: 0;
   color: #005BFE;
   align-items: center;
-  width: 50%;
 }
 header .logo img {
-  width: 12%;
-  height: 12%;
-  padding-right: 10%;
+  width: 28px !important;
+  height: 28px !important;
+  margin-right: 6px;
 }
 header .group-button {
-  padding-right: 5%;
+  padding-right: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 header .group-button button {
   background-color: #005BFE;
@@ -39,11 +62,21 @@ header .group-button button {
 header .group-button button:active {
   background-color: #0047C6;
 }
+header .group-button #add-contact-header {
+  background-color: #F81155;
+  display: none;
+  margin-left: 8px;
+  width: 178px;
+  padding: 0 12px;
+}
+header .group-button #add-contact-header:hover {
+  background-color: #D1003E;
+}
 
 main {
   margin-top: 24px;
-  width: 375px;
-  height: 742px;
+  width: 100%;
+  min-height: 742px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,23 +99,180 @@ main {
   opacity: 30%;
 }
 
+.main-group {
+  width: 90vw;
+  margin-top: 16px;
+  margin-bottom: 12px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+.group-header .group-title {
+  font-weight: 600;
+  color: #111;
+}
+.group-header .arrow-icon {
+  transition: transform 0.22s ease;
+  color: #444;
+}
+.group-header.expanded {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.062745098);
+}
+.group-header .rotated {
+  transform: rotate(180deg);
+}
+
+.contacts-panel {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0 14px;
+  background: #fafafa;
+}
+.contacts-panel.expanded {
+  padding: 10px 14px;
+}
+.contacts-panel .contact-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  column-gap: 12px;
+  row-gap: 6px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.031372549);
+}
+.contacts-panel .contact-row:last-child {
+  border-bottom: none;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "name name" "actions number";
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.031372549);
+  column-gap: 10px;
+  row-gap: 6px;
+  align-items: center;
+}
+.contact-row .contact-name {
+  grid-area: name;
+  color: #111;
+  border: none;
+}
+.contact-row .contact-number {
+  grid-area: number;
+  color: #555;
+}
+.contact-row .contact-number input {
+  border: none;
+  background: none;
+}
+.contact-row .contact-actions {
+  grid-area: actions;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.contact-row .contact-actions button {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.062745098);
+  background: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+.contact-row .contact-actions button img {
+  width: 14px;
+  height: 14px;
+}
+.contact-row .contact-actions button:hover {
+  background: #fafafa;
+}
+.contact-row .contact-actions button:active {
+  background: #f0f0f0;
+}
+.contact-row .inline-input {
+  height: 32px;
+  border-radius: 6px;
+  padding: 0 8px;
+  outline: none;
+}
+.contact-row .inline-input input {
+  border: none;
+  background: none;
+}
+.contact-row .inline-input.invalid {
+  border-color: #dc3545;
+  background: #fff5f5;
+}
+
+.no-contacts {
+  padding: 12px 14px;
+  color: #777;
+}
+
+#groups {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .groups-menu-overlay {
   position: fixed;
   top: 0;
-  right: 0;
+  right: -300px;
   width: 300px;
   height: 100vh;
   background-color: #FFFFFF;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  padding: 20px;
   box-sizing: border-box;
+  transition: right 0.3s ease-in-out;
+}
+.groups-menu-overlay.show {
+  right: 0;
 }
 
+.groups-menu {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+}
 .groups-menu h3 {
-  color: #005BFE;
   margin-bottom: 20px;
   text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid black;
+  border-color: rgba(0, 0, 0, 0.062745098);
+  padding-bottom: 23px;
+}
+.groups-menu h3 img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.groups-menu h3 img:hover {
+  opacity: 0.7;
 }
 .groups-menu .empty-groups {
   color: #000000;
@@ -91,34 +281,476 @@ main {
   margin: 20px 0;
 }
 .groups-menu .group-item {
-  padding: 10px;
-  margin: 5px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  margin: 8px 0 0 8px;
   background-color: #F6F7F9;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 8px;
   transition: background-color 0.2s;
+  width: 80%;
 }
 .groups-menu .group-item:hover {
   background-color: #E8F0FE;
 }
-.groups-menu .group-item span {
+.groups-menu .group-item .group-name {
   color: #000000;
-  font-weight: 500;
+  font-family: "Circe", sans-serif;
+  font-weight: light;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-right: 8px;
 }
-.groups-menu #add-group-btn {
-  width: 100%;
+.groups-menu .group-item .delete-group {
+  width: 40px;
   height: 40px;
-  background-color: #005BFE;
-  color: #FFFFFF;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1019607843);
+  background: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+.groups-menu .group-item .delete-group img {
+  width: 16px;
+  height: 16px;
+}
+.groups-menu .group-item .delete-group:hover {
+  background: #fafafa;
+}
+.groups-menu .group-item .delete-group:active {
+  background: #f0f0f0;
+}
+.groups-menu .group-item.edit .delete-group {
+  display: none;
+}
+.groups-menu .group-item.edit input#new-group-name {
+  width: 100%;
+  height: 100%;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  background: none;
+}
+.groups-menu .group-item-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+.groups-menu .menu-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 0 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.groups-menu .menu-group-header .menu-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.groups-menu .menu-group-header .menu-arrow-icon {
+  transition: transform 0.22s ease;
+  color: #444;
+}
+.groups-menu .menu-group-header.expanded {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.062745098);
+}
+.groups-menu .menu-group-header .rotated {
+  transform: rotate(180deg);
+}
+.groups-menu .menu-contacts-panel {
+  overflow: hidden;
+  transition: max-height 0.22s ease;
+  background: #f9f9f9;
+  margin: 0 0 0 0;
+  border-radius: 6px;
+}
+.groups-menu .menu-contacts-panel .contact-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "name name" "actions number";
+  column-gap: 8px;
+  row-gap: 6px;
+  align-items: center;
+  padding: 10px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.031372549);
+}
+.groups-menu .menu-contacts-panel .contact-row .contact-name {
+  grid-area: name;
+  color: #111;
+}
+.groups-menu .menu-contacts-panel .contact-row .contact-number {
+  grid-area: number;
+  color: #555;
+}
+.groups-menu .menu-contacts-panel .contact-row .contact-actions {
+  grid-area: actions;
+}
+.groups-menu .menu-contacts-panel .contact-row:last-child {
+  border-bottom: none;
+}
+.groups-menu .menu-contacts-panel .no-contacts {
+  padding: 10px;
+  color: #777;
+}
+.groups-menu .menu-buttons {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  transition: opacity 0.2s ease;
+}
+.groups-menu .menu-buttons.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.groups-menu .menu-buttons button {
+  flex: 1;
+  height: 40px;
   border: none;
   border-radius: 6px;
-  margin-top: 20px;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-weight: 500;
 }
-.groups-menu #add-group-btn:hover {
+.groups-menu .menu-buttons #add-group-btn {
+  color: #005BFE;
+  background: none;
+}
+.groups-menu .menu-buttons #add-group-btn:hover {
+  background-color: rgba(0, 71, 198, 0.1);
+}
+.groups-menu .menu-buttons #save-groups-btn {
+  background-color: #005BFE;
+  color: #FFFFFF;
+}
+.groups-menu .menu-buttons #save-groups-btn:hover {
   background-color: #0047C6;
 }
-.groups-menu #add-group-btn:active {
-  background-color: #0047C6;
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+
+.notification {
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1200;
+}
+.notification.notification--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.notification.notification--success {
+  border-left: 4px solid #28a745;
+}
+.notification .notification__icon {
+  width: 16px;
+  height: 16px;
+}
+.notification .notification__text {
+  color: #111;
+  font-size: 14px;
+}
+
+.contacts-menu-overlay {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100vh;
+  background-color: #FFFFFF;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  box-sizing: border-box;
+  transition: right 0.3s ease-in-out;
+}
+.contacts-menu-overlay.show {
+  right: 0;
+}
+
+@media (min-width: 768px) {
+  header {
+    width: 100%;
+    justify-content: space-between;
+    padding: 0 16vw;
+  }
+  header .group-button #add-contact-header {
+    display: inline-block;
+  }
+  header .group-button button {
+    width: auto;
+    padding: 0 12px;
+  }
+  header .logo {
+    width: 100%;
+    height: 100%;
+  }
+  #add-group-button {
+    display: none;
+  }
+  .groups-menu-overlay,
+  .contacts-menu-overlay {
+    left: -360px;
+    right: auto;
+    width: 360px;
+    transition: left 0.3s ease-in-out;
+  }
+  .groups-menu-overlay.show,
+  .contacts-menu-overlay.show {
+    left: 0;
+  }
+  .main-group {
+    width: 65vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #groups {
+    align-items: center;
+  }
+  .contacts-panel .contact-row,
+  .menu-contacts-panel .contact-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: "name number actions";
+    column-gap: 12px;
+    row-gap: 0;
+    align-items: center;
+  }
+  .contacts-panel .contact-row .contact-name,
+  .menu-contacts-panel .contact-row .contact-name {
+    grid-area: name;
+  }
+  .contacts-panel .contact-row .contact-number,
+  .menu-contacts-panel .contact-row .contact-number {
+    grid-area: number;
+    text-align: right;
+  }
+  .contacts-panel .contact-row .contact-actions,
+  .menu-contacts-panel .contact-row .contact-actions {
+    grid-area: actions;
+    justify-self: end;
+  }
+}
+.contacts-menu h3 {
+  color: #005BFE;
+  margin-bottom: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.062745098);
+  padding-bottom: 23px;
+}
+.contacts-menu h3 img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.contacts-menu h3 img:hover {
+  opacity: 0.7;
+}
+.contacts-menu .form-field {
+  display: flex;
+  flex-direction: column;
+  margin: 12px 24px;
+}
+.contacts-menu .form-field label {
+  font-size: 12px;
+  color: #444;
+  margin-bottom: 6px;
+}
+.contacts-menu .form-field input, .contacts-menu .form-field select {
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1019607843);
+  padding: 0 10px;
+  outline: none;
+}
+.contacts-menu .form-field input.invalid {
+  border-color: #dc3545;
+  background: #fff5f5;
+}
+.contacts-menu .form-field .field-error {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 6px;
+}
+.contacts-menu .contact-menu-buttons {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+.contacts-menu .contact-menu-buttons button {
+  flex: 1;
+  height: 40px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #efefef;
+}
+.contacts-menu .contact-menu-buttons .primary {
+  background: #005BFE;
+  color: #FFFFFF;
+}
+
+/* Обертка дропдауна — как обычное поле формы */
+.dd {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* Кнопка дропдауна — визуально как инпут */
+.dd__btn {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dd__btn:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+}
+
+/* Список опций — без маркеров и с тем же фоном/границей */
+.dd__list {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  list-style: none; /* Убираем маркеры списка */
+  padding: 0;
+  margin: 0;
+  z-index: 2000;
+}
+
+.dd:not(.dd--open) .dd__list {
+  display: none;
+}
+
+.dd__item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dd__item:hover,
+.dd__item:focus {
+  background-color: rgba(0, 0, 0, 0.04);
+  outline: none;
+}
+
+/* Стиль, когда дропдаун открыт */
+.dd.dd--open .dd__btn {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-color: #4a90e2;
+}
+
+@media (max-width: 480px) {
+  .dd {
+    position: relative;
+  }
+  .dd__list {
+    position: absolute !important;
+    top: calc(100% + 2px) !important;
+    left: 0 !important;
+    right: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    bottom: auto !important;
+  }
+}
+.modal {
+  width: 320px;
+  max-width: calc(100% - 32px);
+  background: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+}
+.modal h4 {
+  margin: 0 0 8px 0;
+  color: #111;
+}
+.modal p {
+  margin: 6px 0;
+  color: #333;
+}
+.modal .modal-hint {
+  display: none;
+}
+.modal .modal-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+.modal .modal-actions button {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: #efefef;
+  color: #111;
+}
+.modal .modal-actions .danger {
+  background: #dc3545;
+  color: #FFFFFF;
 }

@@ -2,35 +2,60 @@ $light-blue: #005BFE;
 $dark-blue: #0047C6;
 $light-white: #FFFFFF;
 $dark-white: #F6F7F9;
+$light-red: #F81155;
+$dark-red: #D1003E;
 
+@font-face {
+    font-family: 'Circe';
+    src: url('../fonts/Circe-Regular.woff2') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Circe';
+    src: url('../fonts/Circe-Light.woff2') format('truetype');
+    font-weight: light;
+    font-style: normal;
+}
+
+html {
+    width: 100%;
+    font-family: "Circe", sans-serif;
+}
 body {
     margin: 0;
     background-color: $dark-white;
 }
 
 header {
-    width: 375px;
+    width: 100%;
     height: 70px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    column-gap: 12px;
     background-color: $light-white;
     align-items: center;
+    padding: 0 12px;
+    box-sizing: border-box;
     .logo {
         display: flex;
         flex-direction: row;
-        padding-left: 5%;
+        padding-left: 0;
         color: $light-blue;
         align-items: center;
-        width: 50%;
         img {
-            width: 12%;
-            height: 12%;
-            padding-right: 10%;
+            width: 28px !important;
+            height: 28px !important;
+            margin-right: 6px;
         }
     }
     .group-button {
-        padding-right: 5%;
+        padding-right: 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
         button {
             background-color: $light-blue;
             color: $light-white;
@@ -43,13 +68,22 @@ header {
             }
             
         }
+        #add-contact-header {
+            background-color: $light-red;
+            display: none;
+            margin-left: 8px;
+            width: 178px; padding: 0 12px;
+            &:hover {
+                background-color: $dark-red;
+            }
+        }
     }
 }
 
 main {
     margin-top: 24px;
-    width: 375px;
-    height: 812px - 70px;
+    width: 100%;
+    min-height: 812px - 70px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -71,25 +105,147 @@ main {
     opacity: 30%;
 }
 
-// Стили для меню групп
+.main-group {
+    width: 90vw;
+    margin-top: 16px;
+    margin-bottom: 12px;
+    background: $light-white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+.group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    cursor: pointer;
+    user-select: none;
+    
+    .group-title { font-weight: 600; color: #111; }
+    .arrow-icon {
+        transition: transform 0.22s ease;
+        color: #444;
+    }
+    &.expanded {
+        border-bottom: 1px solid #00000010;
+    }
+    .rotated { transform: rotate(180deg); }
+}
+
+.contacts-panel {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 0 14px; // сбросим паддинг для анимации
+    background: #fafafa;
+  
+    &.expanded {
+      padding: 10px 14px;
+    }
+  
+    .contact-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto; // на мобильном или desktop
+      column-gap: 12px;
+      row-gap: 6px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #00000008;
+  
+      &:last-child { border-bottom: none; }
+    }
+  }
+  
+
+.contact-row {
+   display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 
+        "name name"
+        "actions number";
+    padding: 10px 14px;
+    border-bottom: 1px solid #00000008;
+    column-gap: 10px;
+    row-gap: 6px;
+    align-items: center;
+    
+    .contact-name { grid-area: name; color: #111; border: none; }
+    .contact-number { grid-area: number; color: #555;  input {border: none; background: none;}}
+    .contact-actions {
+        grid-area: actions;
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        button {
+            width: 28px; height: 28px; border-radius: 6px; border: 1px solid #00000010; background: $light-white; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0;
+            img { width: 14px; height: 14px; }
+            &:hover { background: #fafafa; }
+            &:active { background: #f0f0f0; }
+        }
+    }
+    .inline-input {
+        height: 32px; border-radius: 6px; padding: 0 8px; outline: none;
+        input {border: none; background: none;}
+        &.invalid { border-color: #dc3545; background: #fff5f5; }
+    }
+
+}
+
+.no-contacts {
+    padding: 12px 14px;
+    color: #777;
+}
+
+#groups {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .groups-menu-overlay {
     position: fixed;
     top: 0;
-    right: 0;
+    right: -300px; // Начальная позиция за экраном
     width: 300px;
     height: 100vh;
     background-color: $light-white;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    padding: 20px;
     box-sizing: border-box;
+    transition: right 0.3s ease-in-out;
+    &.show {
+        right: 0; 
+    }
 }
 
 .groups-menu {
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+    
     h3 {
-        color: $light-blue;
         margin-bottom: 20px;
         text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px 24px 0 24px;
+        border-bottom: 1px solid black;
+        border-color: #00000010();
+        padding-bottom: 70px - 23px - 24px;
+        img {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            
+            &:hover {
+                opacity: 0.7;
+            }
+        }
     }
     
     .empty-groups {
@@ -100,40 +256,391 @@ main {
     }
     
     .group-item {
-        padding: 10px;
-        margin: 5px 0;
+        display: flex;
+        flex-direction: column; 
+        align-items: stretch;
+        gap: 8px;
+        margin: 8px 0 0 8px;
         background-color: $dark-white;
-        border-radius: 6px;
-        cursor: pointer;
+        border-radius: 8px;
         transition: background-color 0.2s;
+        width: 80%;
         
-        &:hover {
-            background-color: #E8F0FE;
+        
+        &:hover { background-color: #E8F0FE; }
+        
+        .group-name {
+            color: #000000;
+            font-family: 'Circe', sans-serif;
+            font-weight: light;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding-right: 8px;
         }
         
-        span {
-            color: #000000;
+        .delete-group {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
+            border-radius: 6px;
+            border: 1px solid #0000001a;
+            background: $light-white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            
+            img { width: 16px; height: 16px; }
+            &:hover { background: #fafafa; }
+            &:active { background: #f0f0f0; }
+        }
+        
+        &.edit {
+            .delete-group { display: none; }
+            input#new-group-name {
+                width: 100%;
+                height: 100%;
+                border: none;
+
+                font-size: 14px;
+                outline: none;
+                background: none;
+            }
+        }
+    }
+    .group-item-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        
+    }
+    .menu-group-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 40px;
+        padding: 0 12px;
+        cursor: pointer;
+        user-select: none;
+        
+        .menu-actions { display: inline-flex; gap: 8px; align-items: center; }
+        .menu-arrow-icon { transition: transform 0.22s ease; color: #444; }
+        &.expanded { border-bottom: 1px solid #00000010; }
+        .rotated { transform: rotate(180deg); }
+    }
+
+    .menu-contacts-panel {
+        overflow: hidden;
+        transition: max-height 0.22s ease;
+        background: #f9f9f9;
+        margin: 0 0 0 0; // прилипает к item
+        border-radius: 6px;
+        
+        .contact-row {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-template-areas: 
+                "name name"
+                "actions number";
+            column-gap: 8px;
+            row-gap: 6px;
+            align-items: center;
+            padding: 10px 10px;
+            border-bottom: 1px solid #00000008;
+            
+            .contact-name { grid-area: name; color: #111; }
+            .contact-number { grid-area: number; color: #555;}
+            .contact-actions { grid-area: actions; }
+        }
+        .contact-row:last-child { border-bottom: none; }
+        .no-contacts { padding: 10px; color: #777; }
+    }
+    
+    .menu-buttons {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        transition: opacity 0.2s ease;
+        &.hidden { opacity: 0; pointer-events: none; }
+        
+        button {
+            flex: 1;
+            height: 40px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
             font-weight: 500;
+        }
+        
+        #add-group-btn {
+            color: $light-blue;
+            background: none;
+            &:hover {
+                background-color: rgba($dark-blue, 0.1);
+            }
+        }
+        
+        #save-groups-btn {
+            background-color: $light-blue;
+            color: $light-white;
+            
+            &:hover {
+                background-color: $dark-blue;
+            }
+        }
+    }
+}
+
+// Модальное окно подтверждения
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+// Успешный тост
+.notification {
+    position: fixed;
+    left: 16px;
+    bottom: 16px;
+    background: $light-white;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1200;
+    &.notification--visible { opacity: 1; transform: translateY(0); }
+    &.notification--success { border-left: 4px solid #28a745; }
+    .notification__icon { width: 16px; height: 16px; }
+    .notification__text { color: #111; font-size: 14px; }
+}
+
+// Правое меню добавления контакта
+.contacts-menu-overlay {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100vh;
+    background-color: $light-white;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    box-sizing: border-box;
+    transition: right 0.3s ease-in-out;
+    &.show { right: 0; }
+}
+
+// ===== Desktop breakpoint =====
+@media (min-width: 768px) {
+    header {
+        width: 100%;
+        justify-content: space-between;
+        padding: 0 16vw; // сужаем рабочую область, чтобы элементы были ближе к центру
+        .group-button {
+            #add-contact-header { display: inline-block;
+             }
+            button { width: auto; padding: 0 12px; }
+        }
+        .logo {
+            width: 100%;
+            height: 100%;
         }
     }
     
-    #add-group-btn {
-        width: 100%;
-        height: 40px;
-        background-color: $light-blue;
-        color: $light-white;
-        border: none;
-        border-radius: 6px;
-        margin-top: 20px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        
-        &:hover {
-            background-color: $dark-blue;
+    // скрыть главную кнопку добавления на десктопе
+    #add-group-button { display: none; }
+
+    // боковые меню выезжают слева на десктопе
+    .groups-menu-overlay,
+    .contacts-menu-overlay {
+        left: -360px; right: auto; width: 360px;
+        transition: left 0.3s ease-in-out;
+        &.show { left: 0; }
+    }
+
+    .main-group { width: 65vw; margin-left: auto; margin-right: auto; }
+    #groups { align-items: center; }
+
+    // на десктопе строки контактов в одну линию
+    .contacts-panel .contact-row,
+    .menu-contacts-panel .contact-row {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        grid-template-areas: "name number actions";
+        column-gap: 12px; row-gap: 0;
+        align-items: center;
+        .contact-name { grid-area: name; }
+        .contact-number { grid-area: number; text-align: right; }
+        .contact-actions { grid-area: actions; justify-self: end; }
+    }
+}
+
+.contacts-menu {
+    h3 {
+        color: $light-blue;
+        margin-bottom: 20px;
+        text-align: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 24px 24px 0 24px;
+        border-bottom: 1px solid #00000010;
+        padding-bottom: 70px - 23px - 24px;
+        img {
+            width: 20px; height: 20px; cursor: pointer; transition: opacity 0.2s;
+            &:hover { opacity: 0.7; }
         }
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        margin: 12px 24px;
+        label { font-size: 12px; color: #444; margin-bottom: 6px; }
+        input, select {
+            height: 40px; border-radius: 6px; border: 1px solid #0000001a; padding: 0 10px; outline: none;
+        }
+        input.invalid { border-color: #dc3545; background: #fff5f5; }
+        .field-error { color: #dc3545; font-size: 12px; margin-top: 6px; }
+    }
+
+    .contact-menu-buttons {
+        position: absolute; bottom: 20px; left: 20px; right: 20px; display: flex; gap: 10px;
+        button { flex: 1; height: 40px; border: none; border-radius: 6px; cursor: pointer; background: #efefef; }
+        .primary { background: $light-blue; color: $light-white; }
+    }
+}
+
+// ===== CustomDropdown responsive styles =====
+/* Обертка дропдауна — как обычное поле формы */
+.dd {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+  }
+  
+  /* Кнопка дропдауна — визуально как инпут */
+  .dd__btn {
+    display: block;
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .dd__btn:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+  }
+  
+  /* Список опций — без маркеров и с тем же фоном/границей */
+  .dd__list {
+    position: absolute;
+    top: calc(100% + 2px);
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    list-style: none; /* Убираем маркеры списка */
+    padding: 0;
+    margin: 0;
+    z-index: 2000;
+  }
+  
+  .dd:not(.dd--open) .dd__list {
+    display: none;
+  }
+  
+  .dd__item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .dd__item:hover,
+  .dd__item:focus {
+    background-color: rgba(0,0,0,0.04);
+    outline: none;
+  }
+  
+  /* Стиль, когда дропдаун открыт */
+  .dd.dd--open .dd__btn {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-color: #4a90e2;
+  }
+  
+@media (max-width: 480px) {
+    // on mobile show the list tied to button (same width, 2px below)
+    .dd { position: relative; }
+    .dd__list { position: absolute !important; top: calc(100% + 2px) !important; left: 0 !important; right: auto !important; width: 100% !important; max-width: 100% !important; bottom: auto !important; }
+}
+
+.modal {
+    width: 320px;
+    max-width: calc(100% - 32px);
+    background: $light-white;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    padding: 16px;
+
+    h4 {
+        margin: 0 0 8px 0;
+        color: #111;
+    }
+    p { margin: 6px 0; color: #333; }
+    .modal-hint { display: none; }
+    .modal-actions {
+        margin-top: 14px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
         
-        &:active {
-            background-color: $dark-blue;
+        button {
+            height: 36px;
+            padding: 0 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background: #efefef;
+            color: #111;
+        }
+        .danger {
+            background: #dc3545;
+            color: $light-white;
         }
     }
 }
