@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "npx tsc && sass src/css:src/css --no-source-map",
+    "build": "tsc && sass src/css:src/css --no-source-map",
     "build:css": "sass src/css:src/css --no-source-map",
     "dev": "npx tsc --watch",
     "dev:css": "sass src/css:src/css --watch --no-source-map",
@@ -14,9 +14,8 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-  "typescript": "^5.9.2",
-  "sass": "^1.93.0",
-  "concurrently": "^9.2.1",
-  "live-server": "^1.2.2"
-}
+    "concurrently": "^9.2.1",
+    "live-server": "^1.2.2",
+    "sass": "^1.93.0"
+  }
 }
