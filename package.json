@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc && sass src/css:src/css --no-source-map",
+    "build": "npx tsc && sass src/css:src/css --no-source-map",
     "build:css": "sass src/css:src/css --no-source-map",
     "dev": "tsc --watch",
     "dev:css": "sass src/css:src/css --watch --no-source-map",
