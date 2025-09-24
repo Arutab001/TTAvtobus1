@@ -62,10 +62,8 @@ function showAddContactMenu() {
     if (numInput && window.IMask) {
         window.IMask(numInput, { mask: '+{7} (000) 000-00-00' });
     }
-    else {
-        numInput?.addEventListener('input', () => {
-            if (!numInput)
-                return;
+    else if (numInput) {
+        numInput.addEventListener('input', () => {
             const caret = numInput.selectionStart || 0;
             const before = numInput.value;
             numInput.value = sanitizePhoneInput(numInput.value);
@@ -93,18 +91,18 @@ function saveContactFromMenu() {
     const phone = (numInput?.value || '').trim();
     const groupName = dd?.value || '';
     let hasError = false;
-    if (!fullName) {
+    if (!fullName && nameInput) {
         markInvalid(nameInput, 'Поле не должно быть пустым');
         hasError = true;
     }
-    else {
+    else if (nameInput) {
         clearInvalid(nameInput);
     }
-    if (!phone || !isValidPhone(sanitizePhoneInput(phone))) {
+    if ((!phone || !isValidPhone(sanitizePhoneInput(phone))) && numInput) {
         markInvalid(numInput, 'Неверный номер');
         hasError = true;
     }
-    else {
+    else if (numInput) {
         clearInvalid(numInput);
     }
     if (!groupName) {
@@ -124,8 +122,12 @@ function saveContactFromMenu() {
     showSuccessToast('Контакт успешно создан');
 }
 function startInlineEdit(row, groupName, index) {
-    const contactData = groups.find(g => g.name === groupName).contacts[index];
-    // заменяем только текст на input, оставляем кнопки
+    const group = groups.find(g => g.name === groupName);
+    if (!group)
+        return;
+    const contactData = group.contacts[index];
+    if (!contactData)
+        return;
     const nameSpan = row.querySelector('.contact-name');
     const numberSpan = row.querySelector('.contact-number');
     const nameInput = document.createElement('input');
@@ -165,9 +167,7 @@ function startInlineEdit(row, groupName, index) {
         renderMainGroups();
         showSuccessToast('Контакт обновлён');
     };
-    const cancelChanges = () => {
-        renderMainGroups();
-    };
+    const cancelChanges = () => renderMainGroups();
     const actions = row.querySelector('.contact-actions');
     const editBtn = actions.querySelector('.contact-edit');
     const deleteBtn = actions.querySelector('.contact-delete');
@@ -211,34 +211,33 @@ function renderMainGroups() {
       </div>
     `;
     }).join('');
-    groups_list.addEventListener('click', (e) => {
-        const target = e.target;
-        const editBtn = target.closest('.contact-edit');
-        if (editBtn) {
-            const row = editBtn.closest('.contact-row');
+    groups_list.querySelectorAll('.contact-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const row = btn.closest('.contact-row');
             if (row && row.dataset.editing === 'false') {
                 const groupName = row.getAttribute('data-group');
                 const index = parseInt(row.getAttribute('data-index'), 10);
                 startInlineEdit(row, groupName, index);
             }
+        });
+    });
+    groups_list.querySelectorAll('.contact-delete').forEach(btn => {
+        btn.addEventListener('click', (e) => {
             e.stopPropagation();
-            return;
-        }
-        const deleteBtn = target.closest('.contact-delete');
-        if (deleteBtn) {
-            const row = deleteBtn.closest('.contact-row');
+            const row = btn.closest('.contact-row');
             if (row && row.dataset.editing === 'false') {
                 const groupName = row.getAttribute('data-group');
                 const index = parseInt(row.getAttribute('data-index'), 10);
                 groups.find(g => g.name === groupName).contacts.splice(index, 1);
                 saveToStorage(groups);
                 renderMainGroups();
-                e.stopPropagation();
-                return;
             }
-        }
-        const header = target.closest('.group-header');
-        if (header) {
+        });
+    });
+    groups_list.querySelectorAll('.group-header').forEach(header => {
+        header.addEventListener('click', (e) => {
+            e.stopPropagation();
             const card = header.closest('.main-group');
             const name = card.getAttribute('data-name');
             const panel = card.querySelector('.contacts-panel');
@@ -264,9 +263,7 @@ function renderMainGroups() {
                         panel.style.maxHeight = 'none';
                 }, { once: true });
             }
-            e.stopPropagation();
-            return;
-        }
+        });
     });
 }
 [add_contact_button, add_contact_header_button].filter(Boolean).forEach(btn => btn.addEventListener('click', (e) => { e.stopPropagation(); toggleAddContactMenu(); }));

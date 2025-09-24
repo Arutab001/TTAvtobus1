@@ -6,10 +6,10 @@ import { showSuccessToast } from './ui/toast.js';
 import { showGroupsMenu, hideGroupsMenu } from './ui/groups-menu.js';
 import { CustomDropdown } from './ui/dropdown.js';
 
-const groups_list = document.getElementById("groups");
-const add_contact_button = document.getElementById('add-group-button');
-const add_contact_header_button = document.getElementById('add-contact-header');
-const group_button_desktop = document.getElementById('add-group-desktop');
+const groups_list = document.getElementById("groups") as HTMLElement | null;
+const add_contact_button = document.getElementById('add-group-button') as HTMLElement | null;
+const add_contact_header_button = document.getElementById('add-contact-header') as HTMLElement | null;
+const group_button_desktop = document.getElementById('add-group-desktop') as HTMLElement | null;
 
 let lastGroupsToggleAt = 0;
 let lastContactsToggleAt = 0;
@@ -52,17 +52,16 @@ function showAddContactMenu(): void {
     (overlay as any)._dd = dd;
   }
 
-  overlay.querySelector('#close-contact-menu')?.addEventListener('click', hideAddContactMenu);
+  (overlay.querySelector('#close-contact-menu') as HTMLElement | null)?.addEventListener('click', hideAddContactMenu);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) hideAddContactMenu(); });
-  overlay.querySelector('#cancel-contact')?.addEventListener('click', hideAddContactMenu);
-  overlay.querySelector('#save-contact')?.addEventListener('click', saveContactFromMenu);
+  (overlay.querySelector('#cancel-contact') as HTMLElement | null)?.addEventListener('click', hideAddContactMenu);
+  (overlay.querySelector('#save-contact') as HTMLElement | null)?.addEventListener('click', saveContactFromMenu);
 
   const numInput = overlay.querySelector('#contact-number') as HTMLInputElement | null;
   if (numInput && (window as any).IMask) {
     (window as any).IMask(numInput, { mask: '+{7} (000) 000-00-00' });
-  } else {
-    numInput?.addEventListener('input', () => {
-      if (!numInput) return;
+  } else if (numInput) {
+    numInput.addEventListener('input', () => {
       const caret = numInput.selectionStart || 0;
       const before = numInput.value;
       numInput.value = sanitizePhoneInput(numInput.value);
@@ -75,14 +74,14 @@ function showAddContactMenu(): void {
 }
 
 function hideAddContactMenu(): void {
-  const overlay = document.querySelector('.contacts-menu-overlay');
+  const overlay = document.querySelector('.contacts-menu-overlay') as HTMLElement | null;
   if (!overlay) return;
   overlay.classList.remove('show');
   setTimeout(() => overlay.remove(), 300);
 }
 
 function saveContactFromMenu(): void {
-  const overlay = document.querySelector('.contacts-menu-overlay');
+  const overlay = document.querySelector('.contacts-menu-overlay') as HTMLElement | null;
   if (!overlay) return;
   const nameInput = overlay.querySelector('#contact-name') as HTMLInputElement | null;
   const numInput = overlay.querySelector('#contact-number') as HTMLInputElement | null;
@@ -93,8 +92,8 @@ function saveContactFromMenu(): void {
   const groupName = dd?.value || '';
 
   let hasError = false;
-  if (!fullName) { markInvalid(nameInput!, 'Поле не должно быть пустым'); hasError = true; } else { clearInvalid(nameInput!); }
-  if (!phone || !isValidPhone(sanitizePhoneInput(phone))) { markInvalid(numInput!, 'Неверный номер'); hasError = true; } else { clearInvalid(numInput!); }
+  if (!fullName && nameInput) { markInvalid(nameInput, 'Поле не должно быть пустым'); hasError = true; } else if (nameInput) { clearInvalid(nameInput); }
+  if ((!phone || !isValidPhone(sanitizePhoneInput(phone))) && numInput) { markInvalid(numInput, 'Неверный номер'); hasError = true; } else if (numInput) { clearInvalid(numInput); }
   if (!groupName) { hasError = true; }
   if (hasError) return;
 
@@ -110,11 +109,13 @@ function saveContactFromMenu(): void {
 }
 
 function startInlineEdit(row: HTMLElement, groupName: string, index: number) {
-  const contactData = groups.find(g => g.name === groupName)!.contacts[index];
+  const group = groups.find(g => g.name === groupName);
+  if (!group) return;
+  const contactData = group.contacts[index];
+  if (!contactData) return;
 
-  // заменяем только текст на input, оставляем кнопки
-  const nameSpan = row.querySelector('.contact-name')!;
-  const numberSpan = row.querySelector('.contact-number')!;
+  const nameSpan = row.querySelector('.contact-name') as HTMLElement;
+  const numberSpan = row.querySelector('.contact-number') as HTMLElement;
 
   const nameInput = document.createElement('input');
   nameInput.value = contactData.name;
@@ -146,15 +147,11 @@ function startInlineEdit(row: HTMLElement, groupName: string, index: number) {
     showSuccessToast('Контакт обновлён');
   };
 
-  const cancelChanges = () => {
-    renderMainGroups();
-  };
+  const cancelChanges = () => renderMainGroups();
 
-  const actions = row.querySelector('.contact-actions')!;
-  const editBtn = actions.querySelector('.contact-edit')!;
-  const deleteBtn = actions.querySelector('.contact-delete')!;
-
-
+  const actions = row.querySelector('.contact-actions') as HTMLElement;
+  const editBtn = actions.querySelector('.contact-edit') as HTMLElement;
+  const deleteBtn = actions.querySelector('.contact-delete') as HTMLElement;
 
   editBtn.onclick = saveChanges;
   deleteBtn.onclick = cancelChanges;
@@ -196,41 +193,39 @@ function renderMainGroups(): void {
     `;
   }).join('');
 
-  groups_list.addEventListener('click', (e) => {
-    const target = e.target as HTMLElement;
-
-    const editBtn = target.closest('.contact-edit');
-    if (editBtn) {
-      const row = editBtn.closest('.contact-row');
+  groups_list.querySelectorAll('.contact-edit').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const row = (btn as HTMLElement).closest('.contact-row') as HTMLElement;
       if (row && row.dataset.editing === 'false') {
         const groupName = row.getAttribute('data-group')!;
         const index = parseInt(row.getAttribute('data-index')!, 10);
         startInlineEdit(row, groupName, index);
       }
-      e.stopPropagation();
-      return;
-    }
+    });
+  });
 
-    const deleteBtn = target.closest('.contact-delete');
-    if (deleteBtn) {
-      const row = deleteBtn.closest('.contact-row');
+  groups_list.querySelectorAll('.contact-delete').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const row = (btn as HTMLElement).closest('.contact-row') as HTMLElement;
       if (row && row.dataset.editing === 'false') {
         const groupName = row.getAttribute('data-group')!;
         const index = parseInt(row.getAttribute('data-index')!, 10);
         groups.find(g => g.name === groupName)!.contacts.splice(index, 1);
         saveToStorage(groups);
         renderMainGroups();
-        e.stopPropagation();
-        return;
       }
-    }
+    });
+  });
 
-    const header = target.closest('.group-header');
-    if (header) {
-      const card = header.closest('.main-group')!;
+  groups_list.querySelectorAll('.group-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = (header as HTMLElement).closest('.main-group') as HTMLElement;
       const name = card.getAttribute('data-name')!;
-      const panel = card.querySelector('.contacts-panel')!;
-      const arrow = card.querySelector('.arrow-icon')!;
+      const panel = card.querySelector('.contacts-panel') as HTMLElement;
+      const arrow = card.querySelector('.arrow-icon') as HTMLElement;
       const expanded = expandedGroups.has(name);
 
       if (expanded) {
@@ -251,9 +246,7 @@ function renderMainGroups(): void {
           if (expandedGroups.has(name)) panel.style.maxHeight = 'none';
         }, { once: true });
       }
-      e.stopPropagation();
-      return;
-    }
+    });
   });
 }
 
